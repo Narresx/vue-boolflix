@@ -8,22 +8,40 @@
             type="text"
             class="form-control"
             placeholder="Inserisci un titolo "
-            v-moodel="term"
+            v-model="term"
           />
           <button
             class="btn btn-outline-secondary"
             type="button"
-            @click="search"
+            @click="fetchMovie"
           >
             Cerca
           </button>
         </div>
       </div>
     </header>
+    <main>
+      <div class="container">
+        <div
+          class="card"
+          v-for="movie in movies"
+          :key="movie.id"
+          style="width: 18rem"
+        >
+          <div class="card-header">{{ movie.title }}</div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{ movie.original_title }}</li>
+            <li class="list-group-item">{{ movie.original_language }}</li>
+            <li class="list-group-item">{{ movie.vote_average }}</li>
+          </ul>
+        </div>
+      </div>
+    </main>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "App",
 
@@ -31,11 +49,36 @@ export default {
     return {
       movies: [],
       term: "",
+      query: "Batman",
+      api_key: "0a121df1225a21502274c82149935a89",
     };
   },
+
   methods: {
-    search() {
-      console.log("Ciao");
+    genreList() {
+      const genres = [];
+      this.movies.forEach((movie) => {
+        const { genre } = movie;
+        if (!genres.includes(genre)) genres.push(genre);
+      });
+      return genres;
+    },
+
+    fetchMovie() {
+      const config = {
+        params: {
+          api_key: this.api_key,
+          query: this.query,
+          language: "it-IT",
+        },
+      };
+      axios
+        .get(`https://api.themoviedb.org/3/search/movie`, config)
+        .then((res) => {
+          this.movies = res.data.results;
+
+          this.genreList();
+        });
     },
   },
 };
