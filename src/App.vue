@@ -13,7 +13,7 @@
           <button
             class="btn btn-outline-secondary"
             type="button"
-            @click="fetchMovie"
+            @click="fetch"
           >
             Cerca
           </button>
@@ -91,7 +91,7 @@ export default {
       return genresTV;
     },
 
-    fetchMovie() {
+    fetch() {
       const config = {
         params: {
           api_key: this.api_key,
