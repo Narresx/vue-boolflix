@@ -32,7 +32,10 @@
           <div class="card-header">{{ movie.title }}</div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">{{ movie.original_title }}</li>
-            <li class="list-group-item">{{ movie.original_language }}</li>
+            <li class="list-group-item">
+              {{ movie.original_language }}
+              <img :src="flags" alt="" />
+            </li>
             <li class="list-group-item">{{ movie.vote_average }}</li>
           </ul>
         </div>
@@ -48,7 +51,10 @@
           <div class="card-header">{{ movie.title }}</div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">{{ movie.original_title }}</li>
-            <li class="list-group-item">{{ movie.original_language }}</li>
+            <li class="list-group-item">
+              {{ movie.original_language }}
+              <img :src="flags" alt="" />
+            </li>
             <li class="list-group-item">{{ movie.vote_average }}</li>
           </ul>
         </div>
@@ -70,6 +76,12 @@ export default {
       query: "",
       api_key: "0a121df1225a21502274c82149935a89",
     };
+  },
+
+  computed: {
+    flags() {
+      return require(`@/assets/img/${this.original_language}.png`);
+    },
   },
 
   methods: {
