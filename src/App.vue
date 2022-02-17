@@ -22,6 +22,23 @@
     </header>
     <main>
       <div class="container">
+        <h2>Film</h2>
+        <div
+          class="card"
+          v-for="movie in movies"
+          :key="movie.id"
+          style="width: 18rem"
+        >
+          <div class="card-header">{{ movie.title }}</div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{ movie.original_title }}</li>
+            <li class="list-group-item">{{ movie.original_language }}</li>
+            <li class="list-group-item">{{ movie.vote_average }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="container">
+        <h2>Serie TV</h2>
         <div
           class="card"
           v-for="movie in movies"
@@ -48,14 +65,15 @@ export default {
   data() {
     return {
       movies: [],
+      tvSeries: [],
       term: "",
-      query: "Batman",
+      query: "",
       api_key: "0a121df1225a21502274c82149935a89",
     };
   },
 
   methods: {
-    genreList() {
+    movieList() {
       const genres = [];
       this.movies.forEach((movie) => {
         const { genre } = movie;
@@ -64,11 +82,20 @@ export default {
       return genres;
     },
 
+    tvSeriesList() {
+      const genresTV = [];
+      this.tvSeries.forEach((serie) => {
+        const { genre } = serie;
+        if (!genresTV.includes(genre)) genresTV.push(genre);
+      });
+      return genresTV;
+    },
+
     fetchMovie() {
       const config = {
         params: {
           api_key: this.api_key,
-          query: this.query,
+          query: this.term,
           language: "it-IT",
         },
       };
@@ -77,7 +104,14 @@ export default {
         .then((res) => {
           this.movies = res.data.results;
 
-          this.genreList();
+          this.movieList();
+        });
+      axios
+        .get(`https://api.themoviedb.org/3/search/tv`, config)
+        .then((res) => {
+          this.tvSeries = res.data.results;
+
+          this.tvSeriesList();
         });
     },
   },
